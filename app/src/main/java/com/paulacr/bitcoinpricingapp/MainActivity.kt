@@ -11,5 +11,6 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModel()
         Log.i("Log modules", "getData() -> ${viewModel.getDataTest()}}")
+        Log.i("Log modules", "getChartData() -> ${viewModel.getChartData()}}")
     }
 }

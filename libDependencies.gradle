@@ -7,6 +7,13 @@ ext {
     materialDesignVersion = '1.2.1'
     constraintLayoutVersion = '2.0.4'
 
+    // Network
+    ext.retrofitVersion = '2.7.2'
+    ext.rxjavaVersion = '2.2.9'
+    ext.RxJavaAdapterVersion = "2.7.1"
+    ext.rxAndroidVersion = '2.1.1'
+    ext.OkhttpVersion = '4.3.1'
+
     // Tests
     jUnitVersion = '4.13.1'
     androidTestJUnitVersion = '1.1.2'
