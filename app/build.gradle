@@ -36,6 +36,9 @@ android {
 
 dependencies {
 
+    // Modules dependencies
+    implementation project(":data")
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.core:core-ktx:$ktxVersion"
