@@ -9,7 +9,7 @@ class RemoteBitcoinPricingRepository {
 
     private val apiService: ApiService = Network().getService()
 
-    fun getChartData(): Single<BitcoinPricing> = apiService.getChart(
+    fun getBitcoinPricing(): Single<BitcoinPricing> = apiService.getBitcoinPricing(
         timeInterval = "5weeks",
         rollingAverage = "8hours"
     )

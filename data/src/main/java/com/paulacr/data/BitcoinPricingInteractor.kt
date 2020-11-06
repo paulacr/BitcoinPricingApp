@@ -1,8 +1,6 @@
 package com.paulacr.data
 
-class BitcoinPricingInteractor {
+interface BitcoinPricingInteractor {
 
-    fun getData() = LocalBitcoinPricingRepository().getData()
-
-    fun getChartData() = RemoteBitcoinPricingRepository().getChartData()
+    fun getGraphData() = RemoteBitcoinPricingRepository().getBitcoinPricing()
 }
