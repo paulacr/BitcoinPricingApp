@@ -1,17 +1,17 @@
 package com.paulacr.bitcoinpricingapp
 
 import android.util.Log
-import com.paulacr.data.RepositoryInteractor
+import com.paulacr.data.BitcoinPricingInteractor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ViewModel {
+class GraphViewModel {
 
-    private val repositoryInteractor = RepositoryInteractor()
+    private val repositoryInteractor = BitcoinPricingInteractor()
 
     fun getDataTest() = repositoryInteractor.getData()
 
-    fun getChartData() = RepositoryInteractor().getChartData()
+    fun getChartData() = BitcoinPricingInteractor().getChartData()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe({

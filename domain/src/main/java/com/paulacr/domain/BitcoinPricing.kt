@@ -2,7 +2,7 @@ package com.paulacr.domain
 
 import com.google.gson.annotations.SerializedName
 
-data class Chart(
+data class BitcoinPricing(
     val status: String,
     val name: String,
     val unit: String,

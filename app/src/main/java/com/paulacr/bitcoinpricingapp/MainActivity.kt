@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewModel = ViewModel()
+        val viewModel = GraphViewModel()
         Log.i("Log modules", "getData() -> ${viewModel.getDataTest()}}")
         Log.i("Log modules", "getChartData() -> ${viewModel.getChartData()}}")
     }
