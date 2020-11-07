@@ -54,4 +54,10 @@ dependencies {
     // DI
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // Tests
+    testImplementation "junit:junit:$jUnitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidTestJUnitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }

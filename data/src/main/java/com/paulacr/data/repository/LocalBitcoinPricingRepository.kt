@@ -1,8 +1,7 @@
 package com.paulacr.data.repository
 
-import com.paulacr.domain.PricingUseCase
+import com.paulacr.data.usecase.BitcoinPricingUseCase
 
 internal class LocalBitcoinPricingRepository {
 
-    fun getData() = PricingUseCase()
 }

@@ -9,9 +9,8 @@ interface ApiService {
 
     @GET("/charts/transactions-per-second")
     fun getBitcoinPricing(
-        @Query("timespan") timeInterval: String,
-        @Query("rollingAverage") rollingAverage: String,
-        @Query("format") format: String = "json"
+        @Query("timespan") timeInterval: String? = null,
+        @Query("rollingAverage") rollingAverage: String? = null,
+        @Query("format") format: String? = null
     ): Single<BitcoinPricing>
-
 }
