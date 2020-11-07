@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         injectDependencies()
 
-        Log.i("Log modules", "getData() -> ${viewModel.getBitcoinPricing()}}")
+        Log.i("Log modules", "getData() -> ${viewModel.fetchBitcoinPricing()}}")
     }
 
     private fun injectDependencies() {
