@@ -9,7 +9,7 @@ data class BitcoinPricing(
     val period: String,
     val description: String,
     @SerializedName("values")
-    val values: List<ChartCoordinates>)
+    val coordinatesValues: List<ChartCoordinates>)
 
 data class ChartCoordinates(
     @SerializedName("x")

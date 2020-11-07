@@ -1,5 +1,6 @@
 package com.paulacr.data.repository
 
+import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -12,6 +13,9 @@ class RepositoryModule {
         BitcoinPricingInteractorImpl(remoteRepository)
 
     @Provides
-    fun provideBitcoinPrincingRepository(apiService: ApiService): RemoteBitcoinPricingRepository =
-        RemoteBitcoinPricingRepositoryImpl(apiService)
+    fun provideBitcoinPrincingRepository(apiService: ApiService, mapper: BitcoinPricingMapper): RemoteBitcoinPricingRepository =
+        RemoteBitcoinPricingRepositoryImpl(apiService, mapper)
+
+    @Provides
+    fun provideBitcoinMapper() = BitcoinPricingMapper()
 }
