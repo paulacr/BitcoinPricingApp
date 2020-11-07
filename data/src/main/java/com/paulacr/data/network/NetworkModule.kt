@@ -1,15 +1,20 @@
 package com.paulacr.data.network
 
 import com.paulacr.data.BuildConfig
+import dagger.Module
+import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
-class Network {
+@Module
+object NetworkModule {
 
-    private fun okHttpClient(): OkHttpClient {
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
 
@@ -19,14 +24,17 @@ class Network {
             .build()
     }
 
-    private fun getClient(): Retrofit {
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .client(okHttpClient())
+            .client(okHttpClient)
             .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
 
-    fun getService(): ApiService = getClient().create(ApiService::class.java)
+    @Provides
+    fun provideApiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 }

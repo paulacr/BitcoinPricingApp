@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -42,11 +43,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     // Network
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$RxJavaAdapterVersion"
-    implementation "com.squareup.okhttp3:okhttp:$OkhttpVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$OkhttpVersion"
+    api "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    api "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    api "com.squareup.retrofit2:adapter-rxjava2:$RxJavaAdapterVersion"
+    api "com.squareup.okhttp3:okhttp:$OkhttpVersion"
+    api "com.squareup.okhttp3:logging-interceptor:$OkhttpVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+
+    // DI
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 }
