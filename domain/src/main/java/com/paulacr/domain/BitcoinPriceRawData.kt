@@ -2,18 +2,18 @@ package com.paulacr.domain
 
 import com.google.gson.annotations.SerializedName
 
-data class BitcoinPricing(
+data class BitcoinPriceRawData(
     val status: String,
     val name: String,
     val unit: String,
     val period: String,
     val description: String,
     @SerializedName("values")
-    val coordinatesValues: List<TransactionCoordinates>)
+    val prices: List<PriceRawValue>)
 
-data class TransactionCoordinates(
+data class PriceRawValue(
     @SerializedName("x")
-    val xCoordinateValue: Double,
+    val timeStamp: Long,
     @SerializedName("y")
-    val yCoordinateValue: Double
+    val price: Double
 )
