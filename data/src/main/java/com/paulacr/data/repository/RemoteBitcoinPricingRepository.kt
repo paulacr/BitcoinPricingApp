@@ -5,5 +5,5 @@ import io.reactivex.Single
 
 interface RemoteBitcoinPricingRepository {
 
-    fun getBitcoinPricing(timeInterval: String? = null, rollingAverage: String? = null): Single<BitcoinPrice>
+    fun getBitcoinPrice(timeInterval: String? = null, rollingAverage: String? = null): Single<BitcoinPrice>
 }

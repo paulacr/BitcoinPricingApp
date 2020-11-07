@@ -4,9 +4,10 @@ import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
 import com.paulacr.data.repository.RemoteBitcoinPricingRepository
 import com.paulacr.data.repository.RemoteBitcoinPricingRepositoryImpl
-import com.paulacr.domain.BitcoinPricing
-import com.paulacr.domain.TransactionCoordinates
-import com.paulacr.domain.Pricing
+import com.paulacr.domain.BitcoinPrice
+import com.paulacr.domain.BitcoinPriceRawData
+import com.paulacr.domain.Price
+import com.paulacr.domain.PriceRawValue
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import junit.framework.Assert.assertEquals
@@ -45,23 +46,23 @@ class RemoteBitcoinPricingRepositoryTest {
     @Test
     fun shouldGetLast5WeeksBitcoinPricingAndMapToPricing() {
 
-        val apiPricing = BitcoinPricing(
-            "online", "Testing", "unit", "8hours",
-            "some description", listOf(
-                TransactionCoordinates(123456.0, 12.34467)
+        val apiPricing = BitcoinPriceRawData(
+            "ok", "Transaction Rate", "Transactions Per Second", "minute",
+            "The number of Bitcoin transactions added to the mempool per second.", listOf(
+                PriceRawValue(1601741700, 3.540104166666666)
             )
         )
 
         mockitoWhen(apiService.getBitcoinPricing()).thenReturn(Single.just(apiPricing))
 
-        val result = repository.getBitcoinPricing()
-        val testObserver: TestObserver<Pricing> = TestObserver()
+        val result = repository.getBitcoinPrice()
+        val testObserver: TestObserver<BitcoinPrice> = TestObserver()
         result.subscribe(testObserver)
 
-        val expectedValue = Pricing(
-            "Testing", "8hours",
-            "some description", listOf(
-                TransactionCoordinates(123456.0, 12.34467)
+        val expectedValue = BitcoinPrice(
+            "Transaction Rate", "minute",
+            "The number of Bitcoin transactions added to the mempool per second.", listOf(
+                Price("2020-10-03", "16:15:00", 3.540104166666666)
             )
         )
 
@@ -70,64 +71,31 @@ class RemoteBitcoinPricingRepositoryTest {
             .assertComplete()
 
         verify(apiService).getBitcoinPricing()
-        assertEquals(mapper.map(apiPricing).name, "Testing")
-        assertEquals(mapper.map(apiPricing).period, "8hours")
-        assertEquals(mapper.map(apiPricing).description, "some description")
+        assertEquals(mapper.map(apiPricing).name, "Transaction Rate")
+        assertEquals(mapper.map(apiPricing).period, "minute")
         assertEquals(
-            mapper.map(apiPricing).coordinatesValues,
-            listOf(TransactionCoordinates(123456.0, 12.34467))
+            mapper.map(apiPricing).description,
+            "The number of Bitcoin transactions added to the mempool per second."
+        )
+        assertEquals(
+            mapper.map(apiPricing).prices,
+            listOf(
+                Price(
+                    expectedValue.prices[0].date,
+                    expectedValue.prices[0].time,
+                    3.540104166666666
+                )
+            )
         )
     }
 
-    @Test
-    fun shouldGetCurrentBitcoinPricingAndMapToPricing() {
-
-        val apiPricing = BitcoinPricing(
-            "online", "Testing", "unit", "8hours",
-            "some description", listOf(
-                TransactionCoordinates(123456.0, 12.34467)
-            )
-        )
-
-        mockitoWhen(apiService.getBitcoinPricing("5weeks")).thenReturn(Single.just(apiPricing))
-
-        val result = repository.getBitcoinPricing()
-        val testObserver: TestObserver<Pricing> = TestObserver()
-        result.subscribe(testObserver)
-
-        val expectedValue = Pricing(
-            "Testing", "8hours",
-            "some description", listOf(
-                TransactionCoordinates(123456.0, 12.34467)
-            )
-        )
-
-        testObserver
-            .assertValue(expectedValue)
-            .assertComplete()
-
-        verify(apiService).getBitcoinPricing()
-        assertEquals(mapper.map(apiPricing).name, "Testing")
-        assertEquals(mapper.map(apiPricing).period, "8hours")
-        assertEquals(mapper.map(apiPricing).description, "some description")
-        assertEquals(
-            mapper.map(apiPricing).coordinatesValues,
-            listOf(TransactionCoordinates(123456.0, 12.34467))
-        )
-    }
-
+//
     @Test(expected=UnknownHostException::class)
     fun shouldReturnErrorWhenHasNoInternetConnection() {
 
         mockitoWhen(apiService.getBitcoinPricing())
-            .thenReturn(Single.error(IOException()))
+            .thenReturn(Single.error(UnknownHostException()))
 
-        val result = repository.getBitcoinPricing()
-        val testObserver: TestObserver<Pricing> = TestObserver()
-        result.subscribe(testObserver)
-
-        testObserver
-            .assertNoErrors()
-            .assertComplete()
+        repository.getBitcoinPrice()
     }
 }

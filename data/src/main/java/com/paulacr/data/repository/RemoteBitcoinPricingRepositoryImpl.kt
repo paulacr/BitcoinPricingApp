@@ -16,7 +16,7 @@ class RemoteBitcoinPricingRepositoryImpl @Inject constructor(
     private val mapper: BitcoinPricingMapper
 ) : RemoteBitcoinPricingRepository {
 
-    override fun getBitcoinPricing(timeInterval: String?, rollingAverage: String?): Single<BitcoinPrice> =
+    override fun getBitcoinPrice(timeInterval: String?, rollingAverage: String?): Single<BitcoinPrice> =
         apiService.getBitcoinPricing(
             timeInterval?.setDefaultValue(DEFAULT_PRICING_TIME_INTERVAL),
             rollingAverage?.setDefaultValue(DEFAULT_ROLLING_AVERAGE_INTERVAL)

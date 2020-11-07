@@ -4,5 +4,5 @@ import com.paulacr.data.repository.RemoteBitcoinPricingRepository
 
 class BitcoinPricingUseCase(private val repository: RemoteBitcoinPricingRepository) {
 
-    fun fetchBitcoinPricing() = repository.getBitcoinPricing()
+    fun fetchBitcoinPricing() = repository.getBitcoinPrice()
 }
