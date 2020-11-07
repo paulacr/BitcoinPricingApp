@@ -24,6 +24,7 @@ object BitcoinPricingMapper {
                 Price(
                     date = dateTime.first,
                     time = dateTime.second,
+                    dateTimeInMillis = it.timeStamp,
                     price = it.price
                 )
             )
