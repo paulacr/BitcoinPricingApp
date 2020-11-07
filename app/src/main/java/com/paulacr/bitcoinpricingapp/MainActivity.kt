@@ -3,14 +3,22 @@ package com.paulacr.bitcoinpricingapp
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var viewModel: GraphViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        injectDependencies()
 
-        val viewModel = GraphViewModel()
-        Log.i("Log modules", "getData() -> ${viewModel.getDataTest()}}")
-        Log.i("Log modules", "getChartData() -> ${viewModel.getChartData()}}")
+        Log.i("Log modules", "getData() -> ${viewModel.getBitcoinPricing()}}")
+    }
+
+    private fun injectDependencies() {
+        (applicationContext as BitCoinPricingApplication).appComponent.inject(this)
     }
 }

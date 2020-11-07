@@ -1,6 +1,7 @@
 package com.paulacr.bitcoinpricingapp.di
 
 import com.paulacr.bitcoinpricingapp.GraphViewModel
+import com.paulacr.data.repository.BitcoinPricingInteractor
 import dagger.Module
 import dagger.Provides
 
@@ -8,5 +9,5 @@ import dagger.Provides
 class AppModule {
 
     @Provides
-    fun provideGraphViewModel() = GraphViewModel()
+    fun provideGraphViewModel(interactor: BitcoinPricingInteractor) = GraphViewModel(interactor)
 }

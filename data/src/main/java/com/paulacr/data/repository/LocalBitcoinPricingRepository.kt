@@ -1,4 +1,4 @@
-package com.paulacr.data
+package com.paulacr.data.repository
 
 import com.paulacr.domain.PricingUseCase
 
