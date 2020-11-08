@@ -4,7 +4,6 @@ import com.paulacr.data.common.logError
 import com.paulacr.data.common.setDefaultValue
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
-import com.paulacr.domain.BitcoinPrice
 import com.paulacr.domain.Price
 import io.reactivex.Single
 import javax.inject.Inject
@@ -17,7 +16,11 @@ class RemoteBitcoinPricingRepositoryImpl @Inject constructor(
     private val mapper: BitcoinPricingMapper
 ) : RemoteBitcoinPricingRepository {
 
-    override fun getBitcoinPricing(timeInterval: String?, rollingAverage: String?): Single<List<Price>> =
+    override fun getBitcoinPricing(
+        timeInterval: String?,
+        rollingAverage: String?
+    ): Single<List<Price>> =
+
         apiService.getBitcoinPricing(
             timeInterval?.setDefaultValue(DEFAULT_PRICING_TIME_INTERVAL),
             rollingAverage?.setDefaultValue(DEFAULT_ROLLING_AVERAGE_INTERVAL)
