@@ -17,7 +17,7 @@ class BitcoinPriceRepositoryImpl @Inject constructor(
     private val mapper: BitcoinPricingMapper
 ) : BitcoinPriceRepository {
 
-    override fun getLocalBitcoinPrice(): Single<List<Price>>? = Single.just(cache.getData())
+    override fun getLocalBitcoinPrice(): Single<List<Price>> = Single.just(cache.getData())
 
     override fun getRemoteBitcoinPrice(
         timeInterval: String?,

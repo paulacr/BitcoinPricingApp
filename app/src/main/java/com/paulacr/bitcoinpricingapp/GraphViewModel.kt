@@ -18,16 +18,17 @@ class GraphViewModel @Inject constructor(
     private val graphBuilder: GraphBuilder
 ) : BaseViewModel() {
 
-    val graphLiveData = MutableLiveData<ViewState<LineData>>()
+    val graphLiveData = MutableLiveData<Pair<ViewState<LineData>, Boolean>>()
+    private var shouldUpdateGraph = false
 
     // Populate view initially with local data
     fun fetchBitcoinPricing() = pricingUseCase.getLocalBitcoinPrice()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe({
-            it?.let {
+            if (it.isNotEmpty()) {
                 val graphData = graphBuilder.createGraph(it)
-                graphLiveData.postValue(ViewState.Success(graphData))
+                graphLiveData.postValue(ViewState.Success(graphData) to shouldUpdateGraph)
             }
             fetchRemoteBitcoinPrice()
         }, {
@@ -35,12 +36,11 @@ class GraphViewModel @Inject constructor(
         })
         .addToDisposables()
 
-
     // Add timer for rescheduling data each Refresh update interval
     private fun fetchRemoteBitcoinPrice() =
         pricingUseCase.fetchBitcoinPrice()
             .doOnSubscribe {
-                graphLiveData.postValue(ViewState.Loading())
+                graphLiveData.postValue(ViewState.Loading<LineData>() to shouldUpdateGraph)
             }.retryWhen {
                 it.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
             }.subscribeOn(Schedulers.io())
@@ -48,10 +48,10 @@ class GraphViewModel @Inject constructor(
             .repeatWhen { completed ->
                 completed.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
             }.subscribe({
-                val graphData = graphBuilder.createGraph(it)
-                graphLiveData.postValue(ViewState.Success(graphData))
+                graphLiveData.postValue(ViewState.Success(graphBuilder.createGraph(it)) to shouldUpdateGraph)
+                if (!shouldUpdateGraph) shouldUpdateGraph = true
             }, {
-                graphLiveData.postValue(ViewState.Failure(it))
+                graphLiveData.postValue(ViewState.Failure<LineData>(it) to shouldUpdateGraph)
                 logError("Log error", it)
             }).addToDisposables()
 }

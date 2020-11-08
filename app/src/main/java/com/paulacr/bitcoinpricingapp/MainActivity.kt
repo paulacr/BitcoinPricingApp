@@ -8,6 +8,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
 import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
+import com.paulacr.data.common.isVisible
 import com.paulacr.data.common.setVisibility
 import com.paulacr.graph.DateAxisFormatter
 import javax.inject.Inject
@@ -30,15 +31,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupObservables() {
-        viewModel.graphLiveData.observe(this, {
-            handleViewsVisibility(it)
+        viewModel.graphLiveData.observe(this, { (viewState, shouldUpdateGraph) ->
+            handleViewsVisibility(viewState, shouldUpdateGraph).also {
+                if (viewState is ViewState.Success) updateGraphData(viewState.data)
+            }
         })
     }
 
-    private fun plotGraphData(lineData: LineData) {
+    private fun updateGraphData(lineData: LineData) {
         binding.viewGraphContainer.graphView.data = lineData
-        binding.viewGraphContainer.graphView.invalidate()
         setAxisProperties()
+        if (binding.viewGraphContainer.graphView.isVisible()) binding.viewGraphContainer.graphView.invalidate()
     }
 
     private fun setAxisProperties() {
@@ -67,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         (applicationContext as BitCoinPricingApplication).appComponent.inject(this)
     }
 
-    private fun handleViewsVisibility(viewState: ViewState<LineData>) {
+    private fun handleViewsVisibility(viewState: ViewState<LineData>, shouldUpdateGraph: Boolean) {
         val loadingViewVisibility: Boolean
         val graphViewVisibility: Boolean
         val errorViewVisibility: Boolean
@@ -83,7 +86,6 @@ class MainActivity : AppCompatActivity() {
                 loadingViewVisibility = false
                 graphViewVisibility = true
                 errorViewVisibility = false
-                plotGraphData(viewState.data)
             }
             else -> {
                 loadingViewVisibility = false
