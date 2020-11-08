@@ -27,7 +27,17 @@ class MainActivity : AppCompatActivity() {
 
         injectDependencies()
         setupObservables()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.fetchBitcoinPricing()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopFetchingData()
     }
 
     private fun setupObservables() {

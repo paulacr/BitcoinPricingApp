@@ -54,4 +54,8 @@ class GraphViewModel @Inject constructor(
                 graphLiveData.postValue(ViewState.Failure<LineData>(it) to shouldUpdateGraph)
                 logError("Log error", it)
             }).addToDisposables()
+
+    fun stopFetchingData() {
+        super.onCleared()
+    }
 }
