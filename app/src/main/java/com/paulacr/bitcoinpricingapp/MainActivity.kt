@@ -6,23 +6,23 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
+import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
-import com.paulacr.data.common.setGone
-import com.paulacr.data.common.setVisible
+import com.paulacr.data.common.setVisibility
 import com.paulacr.graph.DateAxisFormatter
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.view_error.*
-import kotlinx.android.synthetic.main.view_loading.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityMainBinding
 
     @Inject
     lateinit var viewModel: GraphViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         injectDependencies()
         setupObservables()
@@ -36,19 +36,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun plotGraphData(lineData: LineData) {
-        graphView.data = lineData
-        graphView.invalidate()
+        binding.viewGraphContainer.graphView.data = lineData
+        binding.viewGraphContainer.graphView.invalidate()
         setAxisProperties()
     }
 
     private fun setAxisProperties() {
+        val graphView = binding.viewGraphContainer.graphView
         val xAxis = graphView.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.labelRotationAngle = 0f
         xAxis.axisLineWidth = 3f
         xAxis.textSize = 13f
         xAxis.textColor = Color.BLUE
-        xAxis.valueFormatter = DateAxisFormatter(graphView)
+        xAxis.valueFormatter = DateAxisFormatter(binding.viewGraphContainer.graphView)
 
         val leftAxis: YAxis = graphView.axisLeft
         leftAxis.removeAllLimitLines()
@@ -67,24 +68,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleViewsVisibility(viewState: ViewState<LineData>) {
+        val loadingViewVisibility: Boolean
+        val graphViewVisibility: Boolean
+        val errorViewVisibility: Boolean
+
         when (viewState) {
+
             is ViewState.Loading -> {
-                loadingView.setVisible()
-                graphView.setGone()
-                errorView.setGone()
+                loadingViewVisibility = true
+                graphViewVisibility = false
+                errorViewVisibility = false
             }
             is ViewState.Success -> {
-                loadingView.setGone()
-                graphView.setVisible()
-                errorView.setGone()
+                loadingViewVisibility = false
+                graphViewVisibility = true
+                errorViewVisibility = false
                 plotGraphData(viewState.data)
             }
             else -> {
-                errorView.setVisible()
-                loadingView.setGone()
-                graphView.setGone()
-
+                loadingViewVisibility = false
+                graphViewVisibility = false
+                errorViewVisibility = true
             }
         }
+
+        binding.viewErrorContainer.errorView.setVisibility(errorViewVisibility)
+        binding.viewLoadingContainer.loadingView.setVisibility(loadingViewVisibility)
+        binding.viewGraphContainer.graphContainer.setVisibility(graphViewVisibility)
     }
 }
