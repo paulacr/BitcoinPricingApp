@@ -1,9 +1,10 @@
 package com.paulacr.bitcoinpricingapp
 
+import com.paulacr.bitcoinpricingapp.viewstate.ViewState
 import com.paulacr.data.usecase.BitcoinPricingUseCase
 import com.paulacr.domain.Price
 import com.paulacr.graph.GraphBuilder
-import io.reactivex.Single
+import io.reactivex.Flowable
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
@@ -13,10 +14,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when` as mockitoWhen
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.Mockito.`when` as mockitoWhen
-
 
 @RunWith(MockitoJUnitRunner::class)
 class GraphViewModelTest {
@@ -45,25 +45,16 @@ class GraphViewModelTest {
             Price("2020-10-03", "13:15:00", 1601741700, 3.540104166666666)
         )
 
-        mockitoWhen(useCase.fetchBitcoinPrice()).thenReturn(Single.just(prices))
+        mockitoWhen(useCase.fetchBitcoinPrice()).thenReturn(Flowable.just(prices))
+        mockitoWhen(viewModel.graphLiveData.postValue(ViewState.Loading()))
 
-        val testScheduler = TestScheduler()
-        Mockito.doReturn(testScheduler)
-            .`when`(viewModel)
-            .fetchBitcoinPricing()
-
+        val result = useCase.fetchBitcoinPrice().take(1)
         viewModel.fetchBitcoinPricing()
 
-//        testObserver
-//            .assertComplete()
-//        val result = viewModel.fetchBitcoinPricing()
-//        val testObserver: TestObserver<List<Price>> = TestObserver()
-//        result.subscribe(testObserver)
-//
-//        testObserver
-//            .assertValue(expectedValue)
-//            .assertComplete()
+        result.test()
+            .assertValue(listOf())
+            .assertComplete()
 
-        verify(useCase).getLocalBitcoinPrice()
+        verify((useCase).fetchBitcoinPrice())
     }
 }

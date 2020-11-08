@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         xAxis.axisLineWidth = 3f
         xAxis.textSize = 13f
         xAxis.textColor = Color.BLUE
-        xAxis.valueFormatter = DateAxisFormatter(binding.viewGraphContainer.graphView)
+        xAxis.valueFormatter = DateAxisFormatter()
 
         val leftAxis: YAxis = graphView.axisLeft
         leftAxis.removeAllLimitLines()
