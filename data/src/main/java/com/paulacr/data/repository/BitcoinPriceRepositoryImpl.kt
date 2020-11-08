@@ -5,6 +5,7 @@ import com.paulacr.data.common.setDefaultValue
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
 import com.paulacr.domain.Price
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -32,5 +33,11 @@ class BitcoinPriceRepositoryImpl @Inject constructor(
         }.flatMap {
             val pricesMapper = mapper.map(it)
             Single.just(pricesMapper.prices)
+        }.doOnSuccess {
+            saveBitcoinPriceInCache(it)
         }
+
+    override fun saveBitcoinPriceInCache(prices: List<Price>) {
+        cache.saveData(prices)
+    }
 }

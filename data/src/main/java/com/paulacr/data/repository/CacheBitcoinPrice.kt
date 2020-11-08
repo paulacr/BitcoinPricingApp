@@ -13,5 +13,7 @@ class CacheBitcoinPrice {
         cacheData.addAll(prices)
     }
 
-    fun getData(): List<Price>? = cacheData.toImmutableList()
+    fun getData(): List<Price>? {
+        return cacheData.toImmutableList()
+    }
 }

@@ -18,8 +18,7 @@ class GraphViewModel @Inject constructor(
     private val graphBuilder: GraphBuilder
 ) : BaseViewModel() {
 
-    val graphLiveData = MutableLiveData<Pair<ViewState<LineData>, Boolean>>()
-    private var shouldUpdateGraph = false
+    val graphLiveData = MutableLiveData<ViewState<LineData>>()
 
     // Populate view initially with local data
     fun fetchBitcoinPricing() = pricingUseCase.getLocalBitcoinPrice()
@@ -28,7 +27,7 @@ class GraphViewModel @Inject constructor(
         .subscribe({
             if (it.isNotEmpty()) {
                 val graphData = graphBuilder.createGraph(it)
-                graphLiveData.postValue(ViewState.Success(graphData) to shouldUpdateGraph)
+                graphLiveData.postValue(ViewState.Success(graphData))
             }
             fetchRemoteBitcoinPrice()
         }, {
@@ -37,23 +36,21 @@ class GraphViewModel @Inject constructor(
         .addToDisposables()
 
     // Add timer for rescheduling data each Refresh update interval
-    private fun fetchRemoteBitcoinPrice() =
+    private fun fetchRemoteBitcoinPrice() {
         pricingUseCase.fetchBitcoinPrice()
-            .doOnSubscribe {
-                graphLiveData.postValue(ViewState.Loading<LineData>() to shouldUpdateGraph)
-            }.retryWhen {
+            .retryWhen {
                 it.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
             }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .repeatWhen { completed ->
                 completed.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
             }.subscribe({
-                graphLiveData.postValue(ViewState.Success(graphBuilder.createGraph(it)) to shouldUpdateGraph)
-                if (!shouldUpdateGraph) shouldUpdateGraph = true
+                graphLiveData.postValue(ViewState.Success(graphBuilder.createGraph(it)))
             }, {
-                graphLiveData.postValue(ViewState.Failure<LineData>(it) to shouldUpdateGraph)
+                graphLiveData.postValue(ViewState.Failure(it))
                 logError("Log error", it)
             }).addToDisposables()
+    }
 
     fun stopFetchingData() {
         super.onCleared()

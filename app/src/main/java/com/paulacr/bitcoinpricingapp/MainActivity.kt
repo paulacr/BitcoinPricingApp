@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
         injectDependencies()
         setupObservables()
-
     }
 
     override fun onResume() {
@@ -41,8 +40,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupObservables() {
-        viewModel.graphLiveData.observe(this, { (viewState, shouldUpdateGraph) ->
-            handleViewsVisibility(viewState, shouldUpdateGraph).also {
+        viewModel.graphLiveData.observe(this, { viewState ->
+            handleViewsVisibility(viewState).also {
                 if (viewState is ViewState.Success) updateGraphData(viewState.data)
             }
         })
@@ -80,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         (applicationContext as BitCoinPricingApplication).appComponent.inject(this)
     }
 
-    private fun handleViewsVisibility(viewState: ViewState<LineData>, shouldUpdateGraph: Boolean) {
+    private fun handleViewsVisibility(viewState: ViewState<LineData>) {
         val loadingViewVisibility: Boolean
         val graphViewVisibility: Boolean
         val errorViewVisibility: Boolean
