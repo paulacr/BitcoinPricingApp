@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
+        android:id="@+id/graphView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintVertical_chainStyle="spread_inside"
@@ -15,7 +15,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/title"/>
+        app:layout_constraintBottom_toTopOf="@id/title"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/title"
@@ -23,8 +25,23 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:text="Bitcoin Price"
-        app:layout_constraintTop_toBottomOf="@id/chart"
+        app:layout_constraintTop_toBottomOf="@id/graphView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <include
+        android:id="@+id/viewLoading"
+        layout="@layout/view_loading"
+        tools:visibility="visible"/>
+
+    <include
+        android:id="@+id/viewError"
+        layout="@layout/view_error"
+        tools:visibility="visible"
+        android:visibility="gone"/>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

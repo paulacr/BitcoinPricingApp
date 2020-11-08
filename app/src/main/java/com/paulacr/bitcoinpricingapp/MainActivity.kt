@@ -3,14 +3,17 @@ package com.paulacr.bitcoinpricingapp
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
+import com.paulacr.data.common.setGone
+import com.paulacr.data.common.setVisible
 import com.paulacr.graph.DateAxisFormatter
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.view_error.*
+import kotlinx.android.synthetic.main.view_loading.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,35 +30,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupObservables() {
-        viewModel.graphLiveData.observe(this, Observer {
-            when (it) {
-                is ViewState.Loading -> {
-                }
-                is ViewState.Success -> {
-                    plotGraphData(it.data)
-                }
-                else -> {
-                }
-            }
+        viewModel.graphLiveData.observe(this, {
+            handleViewsVisibility(it)
         })
     }
 
     private fun plotGraphData(lineData: LineData) {
-        chart.data = lineData
-        chart.invalidate()
+        graphView.data = lineData
+        graphView.invalidate()
         setAxisProperties()
     }
 
     private fun setAxisProperties() {
-        val xAxis = chart.xAxis
+        val xAxis = graphView.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.labelRotationAngle = 0f
         xAxis.axisLineWidth = 3f
         xAxis.textSize = 13f
         xAxis.textColor = Color.BLUE
-        xAxis.valueFormatter = DateAxisFormatter(chart)
+        xAxis.valueFormatter = DateAxisFormatter(graphView)
 
-        val leftAxis: YAxis = chart.axisLeft
+        val leftAxis: YAxis = graphView.axisLeft
         leftAxis.removeAllLimitLines()
         leftAxis.axisLineWidth = 3f
         leftAxis.setDrawAxisLine(false)
@@ -69,5 +64,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun injectDependencies() {
         (applicationContext as BitCoinPricingApplication).appComponent.inject(this)
+    }
+
+    private fun handleViewsVisibility(viewState: ViewState<LineData>) {
+        when (viewState) {
+            is ViewState.Loading -> {
+                loadingView.setVisible()
+                graphView.setGone()
+                errorView.setGone()
+            }
+            is ViewState.Success -> {
+                loadingView.setGone()
+                graphView.setVisible()
+                errorView.setGone()
+                plotGraphData(viewState.data)
+            }
+            else -> {
+                errorView.setVisible()
+                loadingView.setGone()
+                graphView.setGone()
+
+            }
+        }
     }
 }
