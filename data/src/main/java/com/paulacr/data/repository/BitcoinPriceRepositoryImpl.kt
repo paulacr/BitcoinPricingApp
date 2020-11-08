@@ -11,12 +11,15 @@ import javax.inject.Inject
 private const val DEFAULT_PRICING_TIME_INTERVAL: String = "5weeks"
 private const val DEFAULT_ROLLING_AVERAGE_INTERVAL = "8hours"
 
-class RemoteBitcoinPricingRepositoryImpl @Inject constructor(
+class BitcoinPriceRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
+    private val cache: CacheBitcoinPrice,
     private val mapper: BitcoinPricingMapper
-) : RemoteBitcoinPricingRepository {
+) : BitcoinPriceRepository {
 
-    override fun getBitcoinPricing(
+    override fun getLocalBitcoinPrice(): Single<List<Price>>? = Single.just(cache.getData())
+
+    override fun getRemoteBitcoinPrice(
         timeInterval: String?,
         rollingAverage: String?
     ): Single<List<Price>> =

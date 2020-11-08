@@ -1,8 +1,10 @@
 package com.paulacr.data.usecase
 
-import com.paulacr.data.repository.RemoteBitcoinPricingRepository
+import com.paulacr.data.repository.BitcoinPriceRepository
 
-class BitcoinPricingUseCase(private val repository: RemoteBitcoinPricingRepository) {
+class BitcoinPricingUseCase(private val repository: BitcoinPriceRepository) {
 
-    fun fetchBitcoinPricing() = repository.getBitcoinPricing()
+    fun fetchBitcoinPrice() = repository.getRemoteBitcoinPrice()
+
+    fun getLocalBitcoinPrice() = repository.getLocalBitcoinPrice()
 }
