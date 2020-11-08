@@ -5,7 +5,6 @@ import com.paulacr.data.common.setDefaultValue
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
 import com.paulacr.domain.Price
-import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ private const val DEFAULT_ROLLING_AVERAGE_INTERVAL = "8hours"
 
 class BitcoinPriceRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val cache: CacheBitcoinPrice,
+    private val cache: BitcoinPriceListCache,
     private val mapper: BitcoinPricingMapper
 ) : BitcoinPriceRepository {
 

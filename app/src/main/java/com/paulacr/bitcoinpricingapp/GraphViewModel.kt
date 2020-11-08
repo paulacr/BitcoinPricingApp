@@ -21,19 +21,21 @@ class GraphViewModel @Inject constructor(
     val graphLiveData = MutableLiveData<ViewState<LineData>>()
 
     // Populate view initially with local data
-    fun fetchBitcoinPricing() = pricingUseCase.getLocalBitcoinPrice()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe({
-            if (it.isNotEmpty()) {
-                val graphData = graphBuilder.createGraph(it)
-                graphLiveData.postValue(ViewState.Success(graphData))
-            }
-            fetchRemoteBitcoinPrice()
-        }, {
-            logError("Log local data error", it)
-        })
-        .addToDisposables()
+    fun fetchBitcoinPricing() {
+        pricingUseCase.getLocalBitcoinPrice()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.isNotEmpty()) {
+                    val graphData = graphBuilder.createGraph(it)
+                    graphLiveData.postValue(ViewState.Success(graphData))
+                }
+                fetchRemoteBitcoinPrice()
+            }, {
+                logError("Log local data error", it)
+            })
+            .addToDisposables()
+    }
 
     // Add timer for rescheduling data each Refresh update interval
     private fun fetchRemoteBitcoinPrice() {

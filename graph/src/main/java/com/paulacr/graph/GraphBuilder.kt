@@ -7,7 +7,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.paulacr.domain.Price
 import javax.inject.Inject
 
-class GraphBuilder @Inject constructor() {
+open class GraphBuilder @Inject constructor() {
 
     fun createGraph(prices: List<Price>): LineData {
 
