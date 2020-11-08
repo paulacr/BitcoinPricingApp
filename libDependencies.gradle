@@ -17,6 +17,9 @@ ext {
     // DI
     ext.daggerVersion = '2.28'
 
+    // Chart
+    ext.mpAndroidChart = "v3.1.0"
+
     // Tests
     jUnitVersion = '4.13.1'
     androidTestJUnitVersion = '1.1.2'

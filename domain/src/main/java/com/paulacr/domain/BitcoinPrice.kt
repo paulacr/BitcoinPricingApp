@@ -8,5 +8,6 @@ data class BitcoinPrice(val name: String,
 data class Price(
     val date: String,
     val time: String,
+    val dateTimeInMillis: Long,
     val price: Double
 )
