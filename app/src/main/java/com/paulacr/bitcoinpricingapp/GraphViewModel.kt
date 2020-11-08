@@ -20,20 +20,39 @@ class GraphViewModel @Inject constructor(
 
     val graphLiveData = MutableLiveData<ViewState<LineData>>()
 
-    fun fetchBitcoinPricing() = pricingUseCase.fetchBitcoinPricing()
-        .doOnSubscribe {
-            graphLiveData.postValue(ViewState.Loading())
-        }.retryWhen {
-            it.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
-        }.subscribeOn(Schedulers.io())
+    // Populate view initially with local data
+    fun fetchBitcoinPricing() = pricingUseCase.getLocalBitcoinPrice()
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .repeatWhen { completed ->
-            completed.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
-        }.subscribe({
-            val graphData = graphBuilder.createGraph(it)
-            graphLiveData.postValue(ViewState.Success(graphData))
+        .subscribe({
+            if (it.isNotEmpty()) {
+                val graphData = graphBuilder.createGraph(it)
+                graphLiveData.postValue(ViewState.Success(graphData))
+            }
+            fetchRemoteBitcoinPrice()
         }, {
-            graphLiveData.postValue(ViewState.Failure(it))
-            logError("Log error", it)
-        }).addToDisposables()
+            logError("Log local data error", it)
+        })
+        .addToDisposables()
+
+    // Add timer for rescheduling data each Refresh update interval
+    private fun fetchRemoteBitcoinPrice() {
+        pricingUseCase.fetchBitcoinPrice()
+            .retryWhen {
+                it.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
+            }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .repeatWhen { completed ->
+                completed.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
+            }.subscribe({
+                graphLiveData.postValue(ViewState.Success(graphBuilder.createGraph(it)))
+            }, {
+                graphLiveData.postValue(ViewState.Failure(it))
+                logError("Log error", it)
+            }).addToDisposables()
+    }
+
+    fun stopFetchingData() {
+        super.onCleared()
+    }
 }

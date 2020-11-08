@@ -10,13 +10,16 @@ import dagger.Provides
 class DataModule {
 
     @Provides
-    fun provideBitcoinPricingUseCase(remoteRepository: RemoteBitcoinPricingRepository) =
-        BitcoinPricingUseCase(remoteRepository)
+    fun provideBitcoinPriceUseCase(repository: BitcoinPriceRepository) =
+        BitcoinPricingUseCase(repository)
 
     @Provides
-    fun provideBitcoinPrincingRepository(apiService: ApiService, mapper: BitcoinPricingMapper): RemoteBitcoinPricingRepository =
-        RemoteBitcoinPricingRepositoryImpl(apiService, mapper)
+    fun provideRemoteBitcoinPriceRepository(apiService: ApiService, cacheData: CacheBitcoinPrice, mapper: BitcoinPricingMapper): BitcoinPriceRepository =
+        BitcoinPriceRepositoryImpl(apiService, cacheData, mapper)
 
     @Provides
     fun provideBitcoinMapper() = BitcoinPricingMapper
+
+    @Provides
+    fun provideBitcoinPriceCache() = CacheBitcoinPrice()
 }

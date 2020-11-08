@@ -5,18 +5,22 @@ import com.paulacr.data.common.setDefaultValue
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
 import com.paulacr.domain.Price
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 private const val DEFAULT_PRICING_TIME_INTERVAL: String = "5weeks"
 private const val DEFAULT_ROLLING_AVERAGE_INTERVAL = "8hours"
 
-class RemoteBitcoinPricingRepositoryImpl @Inject constructor(
+class BitcoinPriceRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
+    private val cache: CacheBitcoinPrice,
     private val mapper: BitcoinPricingMapper
-) : RemoteBitcoinPricingRepository {
+) : BitcoinPriceRepository {
 
-    override fun getBitcoinPricing(
+    override fun getLocalBitcoinPrice(): Single<List<Price>> = Single.just(cache.getData())
+
+    override fun getRemoteBitcoinPrice(
         timeInterval: String?,
         rollingAverage: String?
     ): Single<List<Price>> =
@@ -29,5 +33,11 @@ class RemoteBitcoinPricingRepositoryImpl @Inject constructor(
         }.flatMap {
             val pricesMapper = mapper.map(it)
             Single.just(pricesMapper.prices)
+        }.doOnSuccess {
+            saveBitcoinPriceInCache(it)
         }
+
+    override fun saveBitcoinPriceInCache(prices: List<Price>) {
+        cache.saveData(prices)
+    }
 }

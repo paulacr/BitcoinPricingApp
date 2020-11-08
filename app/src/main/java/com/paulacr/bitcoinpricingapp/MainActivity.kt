@@ -8,6 +8,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
 import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
+import com.paulacr.data.common.isVisible
 import com.paulacr.data.common.setVisibility
 import com.paulacr.graph.DateAxisFormatter
 import javax.inject.Inject
@@ -26,19 +27,30 @@ class MainActivity : AppCompatActivity() {
 
         injectDependencies()
         setupObservables()
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.fetchBitcoinPricing()
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopFetchingData()
+    }
+
     private fun setupObservables() {
-        viewModel.graphLiveData.observe(this, {
-            handleViewsVisibility(it)
+        viewModel.graphLiveData.observe(this, { viewState ->
+            handleViewsVisibility(viewState).also {
+                if (viewState is ViewState.Success) updateGraphData(viewState.data)
+            }
         })
     }
 
-    private fun plotGraphData(lineData: LineData) {
+    private fun updateGraphData(lineData: LineData) {
         binding.viewGraphContainer.graphView.data = lineData
-        binding.viewGraphContainer.graphView.invalidate()
         setAxisProperties()
+        if (binding.viewGraphContainer.graphView.isVisible()) binding.viewGraphContainer.graphView.invalidate()
     }
 
     private fun setAxisProperties() {
@@ -83,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                 loadingViewVisibility = false
                 graphViewVisibility = true
                 errorViewVisibility = false
-                plotGraphData(viewState.data)
             }
             else -> {
                 loadingViewVisibility = false
