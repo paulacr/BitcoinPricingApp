@@ -24,9 +24,13 @@ class BitcoinPriceRepositoryImpl @Inject constructor(
     private val mapper: BitcoinPricingMapper
 ) : BitcoinPriceRepository {
 
-    override fun fetchBitcoinPrice() = getRemoteBitcoinPrice().startWith(cache.getData())
+    override fun fetchBitcoinPrice(): Flowable<List<Price>> {
+        return getRemoteBitcoinPrice().startWith(cache.getData())
+    }
 
-    override fun getLocalBitcoinPrice(): List<Price>? = cache.getData()
+    override fun getLocalBitcoinPrice(): List<Price>? {
+        return cache.getData()
+    }
 
     override fun getRemoteBitcoinPrice(
         timeInterval: String?,

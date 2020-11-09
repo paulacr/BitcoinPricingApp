@@ -5,12 +5,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.LineData
 import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
 import com.paulacr.data.common.isVisible
 import com.paulacr.data.common.setVisibility
+import com.paulacr.domain.Price
 import com.paulacr.graph.DateAxisFormatter
+import com.paulacr.graph.GraphBuilder
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +20,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModel: GraphViewModel
+
+    @Inject
+    lateinit var graphBuilder: GraphBuilder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun updateGraphData(lineData: LineData) {
-        binding.viewGraphContainer.graphView.data = lineData
+    private fun updateGraphData(prices: List<Price>) {
+        binding.viewGraphContainer.graphView.data = graphBuilder.createGraph(prices)
         setAxisProperties()
         if (binding.viewGraphContainer.graphView.isVisible()) binding.viewGraphContainer.graphView.invalidate()
     }
@@ -79,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         (applicationContext as BitCoinPricingApplication).appComponent.inject(this)
     }
 
-    private fun handleViewsVisibility(viewState: ViewState<LineData>) {
+    private fun handleViewsVisibility(viewState: ViewState<List<Price>>) {
         val loadingViewVisibility: Boolean
         val graphViewVisibility: Boolean
         val errorViewVisibility: Boolean

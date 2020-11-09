@@ -53,6 +53,7 @@ dependencies {
 
     // DI
     implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation 'androidx.arch.core:core-testing:2.1.0'
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // Tests

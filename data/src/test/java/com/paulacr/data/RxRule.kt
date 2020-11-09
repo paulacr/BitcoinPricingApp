@@ -1,4 +1,4 @@
-package com.paulacr.bitcoinpricingapp
+package com.paulacr.data
 
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins

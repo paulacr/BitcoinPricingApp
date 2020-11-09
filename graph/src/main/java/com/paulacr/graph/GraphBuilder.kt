@@ -7,9 +7,14 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.paulacr.domain.Price
 import javax.inject.Inject
 
-open class GraphBuilder @Inject constructor() {
+interface GraphBuilderInterface {
 
-    fun createGraph(prices: List<Price>): LineData {
+    fun createGraph(prices: List<Price>): LineData
+}
+
+class GraphBuilder @Inject constructor() : GraphBuilderInterface {
+
+    override fun createGraph(prices: List<Price>): LineData {
 
         val entries: MutableList<Entry> = mutableListOf()
         prices.forEachIndexed { index, price ->

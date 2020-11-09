@@ -20,5 +20,7 @@ class BitcoinPriceListCacheImpl @Inject constructor() : BitcoinPriceListCache {
         cacheData.addAll(data)
     }
 
-    override fun getData(): List<Price>? = cacheData.toImmutableList()
+    override fun getData(): List<Price>? {
+        return cacheData.toImmutableList()
+    }
 }
