@@ -1,9 +1,7 @@
 package com.paulacr.data.repository
 
 import com.paulacr.domain.Price
-import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 interface BitcoinPriceRepository {
 

@@ -3,7 +3,6 @@ package com.paulacr.data.usecase
 import com.paulacr.data.repository.BitcoinPriceRepository
 import com.paulacr.domain.Price
 import io.reactivex.Flowable
-import io.reactivex.Single
 import javax.inject.Inject
 
 interface BitcoinPricingUseCase {

@@ -9,8 +9,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-private const val REFRESH_UPDATE = 20L
-
 class GraphViewModel @Inject constructor(
     private val pricingUseCase: BitcoinPricingUseCase
 ) : BaseViewModel() {

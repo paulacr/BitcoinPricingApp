@@ -3,7 +3,6 @@ package com.paulacr.bitcoinpricingapp
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.paulacr.data.usecase.BitcoinPricingUseCase
 import com.paulacr.domain.Price
-import com.paulacr.graph.GraphBuilderInterface
 import io.reactivex.Flowable
 import org.junit.Before
 import org.junit.Rule
@@ -27,9 +26,6 @@ class GraphViewModelTest {
 
     @Mock
     lateinit var useCase: BitcoinPricingUseCase
-
-    @Mock
-    lateinit var graphBuilder: GraphBuilderInterface
 
     private lateinit var viewModel: GraphViewModel
 
