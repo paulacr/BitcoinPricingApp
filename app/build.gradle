@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.paulacr.bitcoinpricingapp.runner.AndroidTestRunner"
 
         buildFeatures {
             dataBinding true
@@ -68,8 +68,6 @@ dependencies {
 
     // Tests
     testImplementation "junit:junit:$jUnitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$androidTestJUnitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
 }

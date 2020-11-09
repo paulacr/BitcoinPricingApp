@@ -52,9 +52,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
 
     // DI
-    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger:2.29.1"
     implementation 'androidx.arch.core:core-testing:2.1.0'
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:2.29.1"
 
     // Tests
     testImplementation "junit:junit:$jUnitVersion"
