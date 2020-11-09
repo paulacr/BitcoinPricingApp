@@ -21,7 +21,7 @@ class GraphBuilder @Inject constructor() : GraphBuilderInterface {
             entries.add(Entry(price.dateTimeInMillis.toFloat(), price.price.toFloat()))
         }
 
-        val lineDataSet = LineDataSet(entries, "Label")
+        val lineDataSet = LineDataSet(entries, "Months")
         val lineData = LineData(lineDataSet)
 
         lineDataSet.setDrawIcons(false)
