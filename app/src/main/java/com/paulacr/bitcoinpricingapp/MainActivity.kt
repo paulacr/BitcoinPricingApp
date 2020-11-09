@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         injectDependencies()
         setupObservables()
+        setupRetryClickListener()
     }
 
     override fun onResume() {
@@ -69,6 +70,13 @@ class MainActivity : AppCompatActivity() {
     private fun getLastUpdatedDateTime(): String {
         val lastUpdateDateTime = getTimeNowFormatted()
         return ("last update: ").plus(lastUpdateDateTime)
+    }
+
+    private fun setupRetryClickListener() {
+        binding.viewErrorContainer.retryButton.setOnClickListener {
+            viewModel.fetchBitcoinPricing()
+            it.isEnabled = false
+        }
     }
 
     private fun updateGraphData(prices: List<Price>) {
@@ -130,5 +138,6 @@ class MainActivity : AppCompatActivity() {
         binding.viewErrorContainer.errorView.setVisibility(errorViewVisibility)
         binding.viewLoadingContainer.loadingView.setVisibility(loadingViewVisibility)
         binding.viewGraphContainer.graphContainer.setVisibility(graphViewVisibility)
+        binding.viewErrorContainer.retryButton.isEnabled = errorViewVisibility
     }
 }
