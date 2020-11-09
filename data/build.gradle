@@ -1,9 +1,7 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id "org.jlleitschuh.gradle.ktlint"
-    id "kotlin-android-extensions"
 }
 
 android {
@@ -11,18 +9,15 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.paulacr.bitcoinpricingapp"
         minSdkVersion 28
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
 
-        buildFeatures {
-            dataBinding true
-            viewBinding true
-        }
+        buildConfigField 'String', 'BASE_URL', '"https://api.blockchain.info/"'
     }
 
     buildTypes {
@@ -42,33 +37,28 @@ android {
 
 dependencies {
 
-    // Modules dependencies
-    implementation project(":data")
+    // Module dependency
     implementation project(":domain")
-    implementation project(":graph")
 
-    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core-ktx:$ktxVersion"
 
-    // UI
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "com.google.android.material:material:$materialDesignVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-
+    // Network
+    api "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    api "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    api "com.squareup.retrofit2:adapter-rxjava2:$RxJavaAdapterVersion"
+    api "com.squareup.okhttp3:okhttp:$OkhttpVersion"
+    api "com.squareup.okhttp3:logging-interceptor:$OkhttpVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
 
     // DI
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    // Chart
-    implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChart"
+    implementation "com.google.dagger:dagger:2.29.1"
+    implementation 'androidx.arch.core:core-testing:2.1.0'
+    kapt "com.google.dagger:dagger-compiler:2.29.1"
 
     // Tests
     testImplementation "junit:junit:$jUnitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidTestJUnitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    testImplementation "androidx.arch.core:core-testing:${archCoreVersion}"
 }
