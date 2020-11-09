@@ -6,7 +6,5 @@ sealed class ViewState<T> {
 
     class Failure<T>(throwable: Throwable) : ViewState<T>()
 
-    class EmptyState<T>() : ViewState<T>()
-
     class Loading<T> : ViewState<T>()
 }

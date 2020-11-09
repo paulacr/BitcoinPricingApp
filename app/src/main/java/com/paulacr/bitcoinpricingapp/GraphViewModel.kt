@@ -25,6 +25,7 @@ class GraphViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (it.isNotEmpty()) graphLiveData.postValue(ViewState.Success(it))
+                else graphLiveData.postValue(ViewState.Failure(Exception("no data to display")))
             }, {
                 logError("Log local data error", it)
             })
