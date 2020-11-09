@@ -1,7 +1,6 @@
 package com.paulacr.graph
 
 import android.text.format.DateFormat
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 class DateAxisFormatter: IndexAxisValueFormatter() {

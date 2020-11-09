@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     @Inject
     lateinit var viewModel: GraphViewModel
