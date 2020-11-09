@@ -13,13 +13,4 @@ class DateConverterTest {
 
         assertEquals(formattedDate.first, "2020-10-03")
     }
-
-    @Test
-    fun shouldConvertMillisecondsInFormattedTime() {
-
-        val dateInMillis = 1601741700.toLong()
-        val formattedDate = dateInMillis.getFormattedDateTime()
-
-        assertEquals(formattedDate.second, "13:15:00")
-    }
 }

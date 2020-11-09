@@ -1,7 +1,6 @@
 package com.paulacr.bitcoinpricingapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.paulacr.data.RxRule
 import com.paulacr.data.usecase.BitcoinPricingUseCase
 import com.paulacr.domain.Price
 import com.paulacr.graph.GraphBuilderInterface
@@ -11,8 +10,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when` as mockitoWhen
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -52,5 +51,4 @@ class GraphViewModelTest {
 
         verify(useCase).fetchBitcoinPrice()
     }
-
 }

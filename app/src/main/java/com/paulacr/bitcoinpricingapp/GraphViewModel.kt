@@ -1,13 +1,10 @@
 package com.paulacr.bitcoinpricingapp
 
 import androidx.lifecycle.MutableLiveData
-import com.github.mikephil.charting.data.LineData
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
 import com.paulacr.data.common.logError
 import com.paulacr.data.usecase.BitcoinPricingUseCase
 import com.paulacr.domain.Price
-import com.paulacr.graph.GraphBuilder
-import com.paulacr.graph.GraphBuilderInterface
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

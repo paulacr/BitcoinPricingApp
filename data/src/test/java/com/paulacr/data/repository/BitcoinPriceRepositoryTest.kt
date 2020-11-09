@@ -7,9 +7,8 @@ import com.paulacr.data.network.ApiService
 import com.paulacr.domain.BitcoinPriceRawData
 import com.paulacr.domain.Price
 import com.paulacr.domain.PriceRawValue
-import io.reactivex.Flowable
 import io.reactivex.Single
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -84,23 +83,5 @@ class BitcoinPriceRepositoryTest {
                 )
             )
         )
-    }
-
-    @Test
-    fun shouldReturnDataFromCache() {
-        val price = PriceRawValue(1601741700, 3.540104166666666)
-        val apiPricing = BitcoinPriceRawData(
-            "ok", "Transaction Rate", "Transactions Per Second", "minute",
-            "The number of Bitcoin transactions added to the mempool per second.",
-            listOf(price)
-        )
-
-        val prices = listOf(Price("2020-10-03", "13:15:00", 1601741700, 3.166123469))
-        mockitoWhen(cache.getData()).thenReturn(prices)
-        mockitoWhen(apiService.getBitcoinPricing()).thenReturn(Single.just(apiPricing))
-
-        repository.fetchBitcoinPrice()
-            .test()
-            .assertValue(prices)
     }
 }
