@@ -24,3 +24,5 @@ private fun getFormattedTime(localDateTime: LocalDateTime): String {
     return localDateTime.format(dateFormatter)
 }
 
+fun getTimeNowFormatted() = getFormattedTime(LocalDateTime.now())
+
