@@ -7,8 +7,10 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
+import com.paulacr.data.common.getTimeNowFormatted
 import com.paulacr.data.common.isVisible
 import com.paulacr.data.common.setVisibility
+import com.paulacr.data.common.setVisible
 import com.paulacr.domain.Price
 import com.paulacr.graph.DateAxisFormatter
 import com.paulacr.graph.GraphBuilder
@@ -46,9 +48,27 @@ class MainActivity : AppCompatActivity() {
     private fun setupObservables() {
         viewModel.graphLiveData.observe(this, { viewState ->
             handleViewsVisibility(viewState).also {
-                if (viewState is ViewState.Success) updateGraphData(viewState.data)
+                if (viewState is ViewState.Success) {
+                    updateGraphData(viewState.data)
+                    setLastBitcoinUpdateText()
+                }
             }
         })
+    }
+
+    private fun setLastBitcoinUpdateText() {
+        binding.viewGraphContainer.lastUpdateText
+            .apply {
+                if (!this.isVisible()) {
+                    this.setVisible()
+                }
+                this.text = getLastUpdatedDateTime()
+            }
+    }
+
+    private fun getLastUpdatedDateTime(): String {
+        val lastUpdateDateTime = getTimeNowFormatted()
+        return ("last update: ").plus(lastUpdateDateTime)
     }
 
     private fun updateGraphData(prices: List<Price>) {
