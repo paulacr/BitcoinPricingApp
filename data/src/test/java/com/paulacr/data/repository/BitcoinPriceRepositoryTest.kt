@@ -1,87 +1,83 @@
 package com.paulacr.data.repository
 
-import com.paulacr.data.RxRule
-import com.paulacr.data.common.getFormattedDateTime
+import com.paulacr.data.RxSchedulerTestRule
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
+import com.paulacr.domain.BitcoinPrice
 import com.paulacr.domain.BitcoinPriceRawData
 import com.paulacr.domain.Price
 import com.paulacr.domain.PriceRawValue
+import io.mockk.*
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.reactivex.Single
-import org.junit.Assert.assertEquals
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.Mockito.`when` as mockitoWhen
 
-@RunWith(MockitoJUnitRunner::class)
 class BitcoinPriceRepositoryTest {
 
-    @Rule
-    @JvmField
-    var testSchedule = RxRule()
-
-    @Mock
+    @RelaxedMockK
     lateinit var apiService: ApiService
 
-    @Mock
+    @RelaxedMockK
     lateinit var cache: BitcoinPriceListCache
 
-    private var mapper = BitcoinPricingMapper
+    @RelaxedMockK
+    lateinit var mapper: BitcoinPricingMapper
 
-    private lateinit var repository: BitcoinPriceRepository
+    @Rule @JvmField
+    var rule = RxSchedulerTestRule()
+
+    lateinit var repository: BitcoinPriceRepository
+
+    private val priceRawValue = mockk<PriceRawValue>(relaxed = true) {
+        every { timeStamp } returns 1601741700
+        every { price } returns 3.540104166666666
+    }
+
+    private val apiPricing = mockk<BitcoinPriceRawData>(relaxed = true) {
+        every { status } returns "ok"
+        every { name } returns "Transaction Rate"
+        every { unit } returns "Transactions Per Second"
+        every { period } returns "minute"
+        every { description } returns "The number of Bitcoin transactions added to the mempool per second."
+        every { prices } returns listOf(priceRawValue)
+    }
+
+    private val price = mockk<Price>(relaxed = true) {
+        every { date } returns "2020-03-03"
+        every { time } returns "20:15"
+        every { dateTimeInMillis } returns 1601741700
+        every { price } returns 3.123456
+    }
+
+    private val bitcoinPrice = mockk<BitcoinPrice>(relaxed = true) {
+        every { name } returns "Transaction Rate"
+        every { period } returns "minute"
+        every { description } returns "The number of Bitcoin transactions added to the mempool per second."
+        every { prices } returns listOf(price)
+    }
 
     @Before
     fun onStart() {
-        MockitoAnnotations.initMocks(this)
+        MockKAnnotations.init(this)
         repository = BitcoinPriceRepositoryImpl(apiService, cache, mapper)
     }
 
     @Test
     fun shouldSaveDataWhenGettingPriceFromRemote() {
+        every { apiService.getBitcoinPricing() } returns Single.just(apiPricing)
+        every { cache.getData() } returns listOf(price)
+        every { mapper.map(apiPricing) } returns bitcoinPrice
 
-        val price = PriceRawValue(1601741700, 3.540104166666666)
-        val apiPricing = BitcoinPriceRawData(
-            "ok", "Transaction Rate", "Transactions Per Second", "minute",
-            "The number of Bitcoin transactions added to the mempool per second.",
-            listOf(price)
-        )
-
-        val dateTime = price.timeStamp.getFormattedDateTime()
-        val cacheData = listOf(
-            Price(dateTime.first, dateTime.second, 1601741700, 3.540104166666666)
-        )
-
-        mockitoWhen(apiService.getBitcoinPricing()).thenReturn(Single.just(apiPricing))
-
-        val result = repository.getRemoteBitcoinPrice().take(1)
-
-        result
-            .test()
-            .assertValue(cacheData)
-
-        verify(cache).saveData(cacheData)
-        assertEquals(mapper.map(apiPricing).name, "Transaction Rate")
-        assertEquals(mapper.map(apiPricing).period, "minute")
-        assertEquals(
-            mapper.map(apiPricing).description,
-            "The number of Bitcoin transactions added to the mempool per second."
-        )
-        assertEquals(
-            mapper.map(apiPricing).prices,
-            listOf(
-                Price(
-                    cacheData[0].date,
-                    cacheData[0].time,
-                    cacheData[0].dateTimeInMillis,
-                    cacheData[0].price
-                )
-            )
-        )
+        repository.fetchBitcoinPrice()
+        verify {
+            cache.getData()
+//            mapper.map(apiPricing)
+        }
     }
 }

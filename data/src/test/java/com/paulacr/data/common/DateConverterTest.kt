@@ -1,5 +1,6 @@
 package com.paulacr.data.common
 
+import com.paulacr.data.common.DateConverter.getFormattedDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

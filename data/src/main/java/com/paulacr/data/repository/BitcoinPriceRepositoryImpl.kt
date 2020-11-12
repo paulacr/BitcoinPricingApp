@@ -2,6 +2,7 @@ package com.paulacr.data.repository
 
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
+import com.paulacr.domain.BitcoinPriceRawData
 import com.paulacr.domain.Price
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -31,12 +32,13 @@ class BitcoinPriceRepositoryImpl @Inject constructor(
         rollingAverage: String?
     ): Flowable<List<Price>> =
 
-        apiService.getBitcoinPricing()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+//        apiService.getBitcoinPricing()
+
+    Single.just(BitcoinPriceRawData("", "", "", "", "", listOf()))
             .retryWhen {
                 it.delay(REFRESH_UPDATE, TimeUnit.SECONDS)
-            }.flatMap {
+            }
+            .flatMap {
                 val pricesMapper = mapper.map(it)
                 saveBitcoinPriceInCache(pricesMapper.prices)
                 Single.just(pricesMapper.prices)

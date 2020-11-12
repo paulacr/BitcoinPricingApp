@@ -1,6 +1,6 @@
 package com.paulacr.data.mapper
 
-import com.paulacr.data.common.getFormattedDateTime
+import com.paulacr.data.common.DateConverter.getFormattedDateTime
 import com.paulacr.domain.BitcoinPriceRawData
 import com.paulacr.domain.BitcoinPrice
 import com.paulacr.domain.Price

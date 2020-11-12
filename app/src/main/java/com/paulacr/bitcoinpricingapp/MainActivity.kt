@@ -7,7 +7,7 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
-import com.paulacr.data.common.getTimeNowFormatted
+import com.paulacr.data.common.DateConverter.getTimeNowFormatted
 import com.paulacr.data.common.isVisible
 import com.paulacr.data.common.setVisibility
 import com.paulacr.data.common.setVisible
