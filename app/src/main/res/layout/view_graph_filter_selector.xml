@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:id="@+id/graphFilterView">
+
+    <RadioButton
+        android:id="@+id/threeYearFilterButton"
+        style="@style/FilterSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/graph_filter_button_selector"
+        android:button="@null"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="3 years"
+        app:buttonCompat="@null" />
+
+    <RadioButton
+        android:id="@+id/oneYearFilterButton"
+        style="@style/FilterSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/graph_filter_button_selector"
+        android:button="@null"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="1 year"
+        app:buttonCompat="@null"
+        tools:checked="true" />
+</RadioGroup>

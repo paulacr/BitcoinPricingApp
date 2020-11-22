@@ -2,18 +2,20 @@ package com.paulacr.bitcoinpricingapp
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.paulacr.bitcoinpricingapp.databinding.ActivityMainBinding
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
-import com.paulacr.data.common.getTimeNowFormatted
-import com.paulacr.data.common.isVisible
-import com.paulacr.data.common.setVisibility
-import com.paulacr.data.common.setVisible
+import com.paulacr.data.common.*
 import com.paulacr.domain.Price
 import com.paulacr.graph.DateAxisFormatter
 import com.paulacr.graph.GraphBuilder
+import kotlinx.android.synthetic.main.view_graph_filter_selector.view.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -30,15 +32,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AndroidThreeTen.init(this)
 
         injectDependencies()
         setupObservables()
         setupRetryClickListener()
+        setupGraphFilterRadioGroup()
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchBitcoinPricing()
+        viewModel.getBitcoinPricingForPeriod(Period.ONE_YEAR)
     }
 
     override fun onPause() {
@@ -76,6 +80,27 @@ class MainActivity : AppCompatActivity() {
         binding.viewErrorContainer.retryButton.setOnClickListener {
             viewModel.fetchBitcoinPricing()
             it.isEnabled = false
+        }
+    }
+
+    private fun setupGraphFilterRadioGroup() {
+        val viewGroup = binding.viewGraphContainer.graphFilterViewContainer.graphFilterView
+        viewGroup.oneYearFilterButton.isChecked = true
+        viewGroup.setOnCheckedChangeListener { item, position ->
+            var timeSpan: Period = when (item.checkedRadioButtonId) {
+                R.id.oneYearFilterButton -> {
+                    Period.ONE_YEAR
+                }
+                R.id.threeYearFilterButton -> {
+                    Period.THREE_YEARS
+                }
+                else -> {
+                    Period.ONE_YEAR
+                }
+            }
+
+            viewModel.getBitcoinPricingForPeriod(timeSpan)
+            Log.i("test", "test")
         }
     }
 

@@ -1,9 +1,15 @@
 package com.paulacr.data.common
 
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class DateConverterTest {
+
+    @Before
+    fun onStart() {
+
+    }
 
     @Test
     fun shouldConvertMillisecondsInFormattedDate() {

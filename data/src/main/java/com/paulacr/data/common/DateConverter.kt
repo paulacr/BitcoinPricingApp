@@ -1,9 +1,10 @@
 package com.paulacr.data.common
 
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
+
 
 private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd"
 private const val TIME_FORMAT_PATTERN = "HH:mm:ss"
@@ -26,3 +27,12 @@ private fun getFormattedTime(localDateTime: LocalDateTime): String {
 
 fun getTimeNowFormatted() = getFormattedTime(LocalDateTime.now())
 
+fun dateTimeNowInMillis() =  LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+fun localDateTimeNow(): LocalDateTime = LocalDateTime.now()
+
+fun dateMinus(years: Long) = LocalDateTime.now().atZone(ZoneId.systemDefault()).minusYears(years)
+
+fun getLocalDateTimeTo(timeInMillis: Long): LocalDateTime {
+    return LocalDateTime.ofInstant(Instant.ofEpochSecond(timeInMillis), ZoneId.systemDefault())
+}

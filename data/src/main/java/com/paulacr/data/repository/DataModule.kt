@@ -19,7 +19,7 @@ class DataModule {
         BitcoinPriceRepositoryImpl(apiService, cacheData, mapper)
 
     @Provides
-    fun provideBitcoinMapper() = BitcoinPricingMapper
+    fun provideBitcoinMapper() = BitcoinPricingMapper()
 
     @Provides
     fun provideBitcoinPriceCache(): BitcoinPriceListCache = BitcoinPriceListCacheImpl()

@@ -2,6 +2,7 @@ package com.paulacr.bitcoinpricingapp
 
 import androidx.lifecycle.MutableLiveData
 import com.paulacr.bitcoinpricingapp.viewstate.ViewState
+import com.paulacr.data.common.Period
 import com.paulacr.data.common.logError
 import com.paulacr.data.usecase.BitcoinPricingUseCase
 import com.paulacr.domain.Price
@@ -22,12 +23,29 @@ class GraphViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (it.isNotEmpty()) graphLiveData.postValue(ViewState.Success(it))
-                else graphLiveData.postValue(ViewState.Failure(Exception("no data to display")))
+                postValueOnViews(it)
             }, {
                 logError("Log local data error", it)
             })
             .addToDisposables()
+    }
+    
+    fun getBitcoinPricingForPeriod(timeSpan: Period) {
+        graphLiveData.postValue(ViewState.Loading())
+        pricingUseCase.getBitcoinPriceForPeriod(timeSpan)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                postValueOnViews(it)
+            }, {
+                logError("Log local data error", it)
+            })
+            .addToDisposables()
+    }
+
+    private fun postValueOnViews(pricesList: List<Price>) {
+        if (pricesList.isNotEmpty()) graphLiveData.postValue(ViewState.Success(pricesList))
+        else graphLiveData.postValue(ViewState.Failure(Exception("no data to display")))
     }
 
     fun stopFetchingData() {

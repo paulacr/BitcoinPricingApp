@@ -1,12 +1,14 @@
 package com.paulacr.data.repository
 
 import com.paulacr.data.RxRule
+import com.paulacr.data.common.Period
 import com.paulacr.data.common.getFormattedDateTime
 import com.paulacr.data.mapper.BitcoinPricingMapper
 import com.paulacr.data.network.ApiService
 import com.paulacr.domain.BitcoinPriceRawData
 import com.paulacr.domain.Price
 import com.paulacr.domain.PriceRawValue
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -83,5 +85,33 @@ class BitcoinPriceRepositoryTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun shouldShowFilteredOneYearPrices() {
+
+        val priceOneYear = PriceRawValue(1601741700, 3.540104166666666)
+        val priceThreeYears = PriceRawValue(1601741700, 3.540104166666666)
+
+        val apiPricing = BitcoinPriceRawData(
+            "ok", "Transaction Rate", "Transactions Per Second", "minute",
+            "The number of Bitcoin transactions...",
+            listOf(priceOneYear, priceThreeYears)
+        )
+
+        val dateTimeOneYear = priceOneYear.timeStamp.getFormattedDateTime()
+        val dateTimeThreeYears = priceThreeYears.timeStamp.getFormattedDateTime()
+
+        mockitoWhen(apiService.getBitcoinPricing("3years")).thenReturn(Single.just(apiPricing))
+        mockitoWhen(cache.getData()).thenReturn(listOf())
+        mockitoWhen(repository.getLocalBitcoinPrice()).thenReturn(listOf())
+
+        val result = repository.getBitcoinPriceForPeriod(Period.ONE_YEAR).take(1)
+
+        result
+            .test()
+            .assertValue(listOf())
+
+        verify(cache).saveData(listOf())
     }
 }

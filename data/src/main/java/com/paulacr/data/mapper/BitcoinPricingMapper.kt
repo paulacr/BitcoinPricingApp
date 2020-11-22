@@ -6,7 +6,7 @@ import com.paulacr.domain.BitcoinPrice
 import com.paulacr.domain.Price
 import com.paulacr.domain.PriceRawValue
 
-object BitcoinPricingMapper {
+class BitcoinPricingMapper {
 
     fun map(rawData: BitcoinPriceRawData) = BitcoinPrice(
         name = rawData.name,
@@ -18,7 +18,7 @@ object BitcoinPricingMapper {
     private fun getPrices(pricesList: List<PriceRawValue>): MutableList<Price> {
         val bitcoinPrices = mutableListOf<Price>()
         var dateTime: Pair<String, String>
-        pricesList.forEach {
+        pricesList.map {
             dateTime = it.timeStamp.getFormattedDateTime()
             bitcoinPrices.add(
                 Price(

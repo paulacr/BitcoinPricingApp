@@ -8,7 +8,7 @@ interface BitcoinPriceListCache {
 
     fun saveData(data: List<Price>)
 
-    fun getData(): List<Price>?
+    fun getData(): List<Price>
 
 }
 class BitcoinPriceListCacheImpl @Inject constructor() : BitcoinPriceListCache {
@@ -20,7 +20,7 @@ class BitcoinPriceListCacheImpl @Inject constructor() : BitcoinPriceListCache {
         cacheData.addAll(data)
     }
 
-    override fun getData(): List<Price>? {
+    override fun getData(): List<Price> {
         return cacheData.toImmutableList()
     }
 }
